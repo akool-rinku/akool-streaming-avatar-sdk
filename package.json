@@ -1,0 +1,49 @@
+{
+  "name": "akool-streaming-avatar-sdk",
+  "version": "1.0.4",
+  "description": "A generic JavaScript SDK for Agora RTC streaming avatar integration",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/index.d.ts",
+  "browser": "./dist/index.iife.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "prepare": "npm run clean && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "agora",
+    "rtc",
+    "streaming",
+    "avatar",
+    "sdk"
+  ],
+  "author": "Rinku Samanta",
+  "license": "ISC",
+  "dependencies": {
+    "agora-rtc-sdk-ng": "^4.19.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "agora-rtc-sdk-ng": "^4.19.3"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "unpkg": "dist/index.iife.js",
+  "jsdelivr": "dist/index.iife.js",
+  "sideEffects": false
+}

@@ -1,0 +1,45 @@
+# Enable rewrite engine
+RewriteEngine On
+
+# Redirect to HTTPS if available
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Prevent directory listing
+Options -Indexes
+
+# Set default character set
+AddDefaultCharset UTF-8
+
+# Protect sensitive files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Only allow access to specific file types
+<FilesMatch "^.*\.(php|html|js|css|jpg|jpeg|png|gif|ico)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
+# Protect against script injection
+<IfModule mod_headers.c>
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Content-Security-Policy "default-src 'self' https://unpkg.com https://cdn.agora.io https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.agora.io https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' wss: https:;"
+</IfModule>
+
+# PHP settings
+<IfModule mod_php.c>
+    php_value upload_max_filesize 2M
+    php_value post_max_size 8M
+    php_value max_execution_time 30
+    php_flag display_errors off
+    php_flag log_errors on
+</IfModule>
+
+# Handle errors
+ErrorDocument 404 /index.php
+ErrorDocument 403 /index.php 
