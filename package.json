@@ -1,6 +1,6 @@
 {
   "name": "akool-streaming-avatar-sdk",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A generic JavaScript SDK for Agora RTC streaming avatar integration",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.esm.js",

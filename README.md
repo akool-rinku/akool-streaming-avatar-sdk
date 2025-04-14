@@ -358,6 +358,7 @@ new GenericAgoraSDK(options?: { mode?: string; codec?: SDK_CODEC })
 
 #### Chat Management
 - `joinChat(metadata: Metadata): Promise<void>` - Initializes the avatar chat session
+- `setParameters(metadata: Metadata): voide` - Call setAvatarParameter [Check here for parameter](https://docs.akool.com/implementation-guidestreaming-avatar#6-control-avatar-parameters)
 - `leaveChat(): Promise<void>` - Leaves the chat session but stays in channel
 - `sendMessage(content: string): Promise<void>` - Sends a message to the avatar
 - `interrupt(): Promise<void>` - Interrupts the current avatar response
