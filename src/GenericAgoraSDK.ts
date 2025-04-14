@@ -210,9 +210,14 @@ export class GenericAgoraSDK {
     this.isJoined = true;
   }
 
+
   public async joinChat(metadata: Metadata): Promise<void> {
     await setAvatarParams(this.client, metadata);
     this.connected = true;
+  }
+
+  async setParameters(params: Metadata): Promise<void> {
+    await setAvatarParams(this.client, params);
   }
 
   public async leaveChat(): Promise<void> {

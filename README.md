@@ -2,6 +2,31 @@
 
 A generic JavaScript SDK for integrating Agora RTC streaming avatar functionality into any JavaScript application.
 
+## Table of Content
+- [Akool Streaming Avatar SDK](#akool-streaming-avatar-sdk)
+  - [Table of Content](#table-of-content)
+  - [Installation](#installation)
+    - [NPM (Node.js/Modern JavaScript)](#npm-nodejsmodern-javascript)
+    - [CDN (Browser)](#cdn-browser)
+  - [Usage](#usage)
+    - [Modern JavaScript/TypeScript (ESM)](#modern-javascripttypescript-esm)
+    - [CommonJS (Node.js)](#commonjs-nodejs)
+    - [Browser (Global/IIFE)](#browser-globaliife)
+  - [Features](#features)
+  - [API Reference](#api-reference)
+    - [Constructor](#constructor)
+    - [Methods](#methods)
+      - [Connection Management](#connection-management)
+      - [Chat Management](#chat-management)
+      - [Audio Management](#audio-management)
+      - [Client Access](#client-access)
+      - [Event Handling](#event-handling)
+    - [Events](#events)
+    - [Types](#types)
+  - [Requirements](#requirements)
+  - [Browser Support](#browser-support)
+  - [License](#license)
+
 ## Installation
 
 ### NPM (Node.js/Modern JavaScript)
@@ -299,7 +324,6 @@ agoraSDK.closeStreaming().then(() => {
 </script>
 ```
 
-
 ## Features
 
 - Easy-to-use API for Agora RTC integration
@@ -325,19 +349,30 @@ new GenericAgoraSDK(options?: { mode?: string; codec?: SDK_CODEC })
 
 ### Methods
 
+#### Connection Management
 - `joinChannel(credentials: AgoraCredentials): Promise<void>` - Joins an Agora RTC channel
-- `joinChat(metadata: Metadata): Promise<void>` - Initializes the avatar chat session
-- `sendMessage(content: string): Promise<void>` - Sends a message to the avatar
-- `interrupt(): Promise<void>` - Interrupts the current avatar response
-- `toggleMic(): Promise<void>` - Toggles the microphone on/off
-- `isMicEnabled(): boolean` - Checks if microphone is enabled
+- `leaveChannel(): Promise<void>` - Leaves the Agora RTC channel
+- `closeStreaming(cb?: () => void): Promise<void>` - Closes all connections and cleanup
 - `isConnected(): boolean` - Checks if connected to Agora services
 - `isChannelJoined(): boolean` - Checks if joined to a channel
+
+#### Chat Management
+- `joinChat(metadata: Metadata): Promise<void>` - Initializes the avatar chat session
+- `setParameters(metadata: Metadata): voide` - Call setAvatarParameter [Check here for parameter](https://docs.akool.com/implementation-guidestreaming-avatar#6-control-avatar-parameters)
+- `leaveChat(): Promise<void>` - Leaves the chat session but stays in channel
+- `sendMessage(content: string): Promise<void>` - Sends a message to the avatar
+- `interrupt(): Promise<void>` - Interrupts the current avatar response
 - `getMessages(): Message[]` - Returns all chat messages
 - `getMessage(messageId: string): Message | undefined` - Returns a specific message
-- `leaveChat(): Promise<void>` - Leaves the chat session but stays in channel
-- `leaveChannel(): Promise<void>` - Leaves the Agora RTC channel
-- `closeStreaming(): Promise<void>` - Closes all connections and cleanup
+
+#### Audio Management
+- `toggleMic(): Promise<void>` - Toggles the microphone on/off
+- `isMicEnabled(): boolean` - Checks if microphone is enabled
+
+#### Client Access
+- `getClient(): RTCClient` - Returns the underlying Agora RTC client instance
+
+#### Event Handling
 - `on(events: SDKEvents): void` - Registers event handlers
 
 ### Events
@@ -345,21 +380,21 @@ new GenericAgoraSDK(options?: { mode?: string; codec?: SDK_CODEC })
 The SDK supports the following events through the `on()` method:
 
 - `onStreamMessage`: Fired when a raw message is received
-- `onMessageReceived`: Fired when a new chat message is received
-- `onMessageUpdated`: Fired when an existing message is updated
-- `onNetworkStatsUpdated`: Fired when network statistics are updated
 - `onException`: Fired when an error occurs
 - `onNetworkQuality`: Fired when network quality changes
 - `onUserJoined`: Fired when a user joins the channel
 - `onUserLeft`: Fired when a user leaves the channel
-- `onUserPublished`: Fired when a user publishes media
-- `onUserUnpublished`: Fired when a user stops publishing media
-- `onTokenWillExpire`: Fired when the token is about to expire
-- `onTokenDidExpire`: Fired when the token has expired
 - `onRemoteAudioStats`: Fired when remote audio stats are updated
 - `onRemoteVideoStats`: Fired when remote video stats are updated
+- `onTokenWillExpire`: Fired when the token is about to expire
+- `onTokenDidExpire`: Fired when the token has expired
+- `onMessageReceived`: Fired when a new chat message is received
+- `onMessageUpdated`: Fired when an existing message is updated
+- `onNetworkStatsUpdated`: Fired when network statistics are updated
+- `onUserPublished`: Fired when a user publishes media
+- `onUserUnpublished`: Fired when a user stops publishing media
 
-## Types
+### Types
 
 ```typescript
 interface AgoraCredentials {
@@ -369,13 +404,13 @@ interface AgoraCredentials {
   agora_uid: number;
 }
 
-type Metadata = {
+interface Metadata {
   vid?: string;    // voiceId
   vurl?: string;   // voiceUrl
   lang?: string;   // language
   mode?: number;   // modeType
   bgurl?: string;  // backgroundUrl
-};
+}
 
 interface Message {
   id: string;
@@ -388,6 +423,23 @@ interface NetworkStats {
   remoteNetwork: NetworkQuality;
   video: RemoteVideoTrackStats;
   audio: RemoteAudioTrackStats;
+}
+
+interface SDKEvents {
+  onStreamMessage?: (uid: UID, message: StreamMessage) => void;
+  onException?: (error: { code: number; msg: string; uid: UID }) => void;
+  onNetworkQuality?: (stats: NetworkQuality) => void;
+  onUserJoined?: (user: IAgoraRTCRemoteUser) => void;
+  onUserLeft?: (user: IAgoraRTCRemoteUser, reason: string) => void;
+  onRemoteAudioStats?: (stats: RemoteAudioTrackStats) => void;
+  onRemoteVideoStats?: (stats: RemoteVideoTrackStats) => void;
+  onTokenWillExpire?: () => void;
+  onTokenDidExpire?: () => void;
+  onMessageReceived?: (message: Message) => void;
+  onMessageUpdated?: (message: Message) => void;
+  onNetworkStatsUpdated?: (stats: NetworkStats) => void;
+  onUserPublished?: (user: IAgoraRTCRemoteUser, mediaType: 'video' | 'audio' | 'datachannel') => void;
+  onUserUnpublished?: (user: IAgoraRTCRemoteUser, mediaType: 'video' | 'audio' | 'datachannel') => void;
 }
 ```
 
