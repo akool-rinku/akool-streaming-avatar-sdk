@@ -246,6 +246,7 @@ export class GenericAgoraSDK {
       this.audioTrack.stop();
       this.audioTrack.close();
       this.audioTrack = null;
+      this.connected = false;
     }
 
     await this.client.leave();
