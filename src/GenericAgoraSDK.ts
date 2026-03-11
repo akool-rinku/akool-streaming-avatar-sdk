@@ -207,7 +207,7 @@ export class GenericAgoraSDK {
     this.isJoined = true;
   }
 
-  public async leaveChannel(): Promise<void> {
+  private async leaveChannel(): Promise<void> {
     if (this.audioTrack) {
       await this.client.unpublish(this.audioTrack);
       this.audioTrack.stop();

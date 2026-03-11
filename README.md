@@ -121,10 +121,7 @@ const isJoined = agoraSDK.isChannelJoined();
 // Interrupt current response
 await agoraSDK.interrupt();
 
-// Leave channel
-await agoraSDK.leaveChannel();
-
-// Or close everything at once
+// Close streaming and clean up
 await agoraSDK.closeStreaming();
 ```
 
@@ -213,14 +210,7 @@ agoraSDK.interrupt().then(() => {
   console.error("Failed to interrupt current response:", error);
 });
 
-// Leave channel
-agoraSDK.leaveChannel().then(() => {
-  console.log("Left channel");
-}).catch((error) => {
-  console.error("Failed to leave channel:", error);
-});
-
-// Or close everything at once
+// Close streaming and clean up
 agoraSDK.closeStreaming().then(() => {
   console.log("Closed streaming");
 }).catch((error) => {
@@ -275,7 +265,6 @@ agoraSDK.closeStreaming().then(() => {
       agora_token: "YOUR_TOKEN",
       agora_uid: 12345
     });
-
   }
 
   async function toggleMic() {
@@ -318,8 +307,7 @@ new GenericAgoraSDK(options?: { mode?: string; codec?: SDK_CODEC })
 
 #### Connection Management
 - `joinChannel(credentials: AgoraCredentials): Promise<void>` - Joins an Agora RTC channel
-- `leaveChannel(): Promise<void>` - Leaves the Agora RTC channel and cleans up all resources
-- `closeStreaming(): Promise<void>` - Alias for `leaveChannel()`
+- `closeStreaming(): Promise<void>` - Leaves the channel and cleans up all resources
 - `isConnected(): boolean` - Checks if connected to Agora services
 - `isChannelJoined(): boolean` - Checks if joined to a channel
 
