@@ -101,13 +101,6 @@ await agoraSDK.joinChannel({
   console.error("Failed to join channel:", error);
 });
 
-// Initialize chat with avatar parameters
-await agoraSDK.joinChat({
-  vid: "voice-id",
-  lang: "en",
-  mode: 2 || 1 // 1 for repeat mode, 2 for dialog mode
-});
-
 // Send a message
 await agoraSDK.sendMessage("Hello, world!");
 
@@ -127,9 +120,6 @@ const isJoined = agoraSDK.isChannelJoined();
 
 // Interrupt current response
 await agoraSDK.interrupt();
-
-// Leave chat (keeps channel connection)
-await agoraSDK.leaveChat();
 
 // Leave channel
 await agoraSDK.leaveChannel();
@@ -191,17 +181,6 @@ agoraSDK.joinChannel({
   console.error("Failed to join channel:", error);
 });
 
-// Initialize chat with avatar parameters
-agoraSDK.joinChat({
-  vid: "voice-id",
-  lang: "en",
-  mode: 2
-}).then(() => {
-  console.log("Initialized chat");
-}).catch((error) => {
-  console.error("Failed to initialize chat:", error);
-});
-
 // Send a message
 agoraSDK.sendMessage("Hello, world!").then(() => {
   console.log("Message sent");
@@ -232,13 +211,6 @@ agoraSDK.interrupt().then(() => {
   console.log("Current response interrupted");
 }).catch((error) => {
   console.error("Failed to interrupt current response:", error);
-});
-
-// Leave chat (keeps channel connection)
-agoraSDK.leaveChat().then(() => {
-  console.log("Left chat");
-}).catch((error) => {
-  console.error("Failed to leave chat:", error);
 });
 
 // Leave channel
@@ -304,11 +276,6 @@ agoraSDK.closeStreaming().then(() => {
       agora_uid: 12345
     });
 
-    await agoraSDK.joinChat({
-      vid: "YOUR_VOICE_ID",
-      lang: "en",
-      mode: 2
-    });
   }
 
   async function toggleMic() {
@@ -351,15 +318,12 @@ new GenericAgoraSDK(options?: { mode?: string; codec?: SDK_CODEC })
 
 #### Connection Management
 - `joinChannel(credentials: AgoraCredentials): Promise<void>` - Joins an Agora RTC channel
-- `leaveChannel(): Promise<void>` - Leaves the Agora RTC channel
-- `closeStreaming(cb?: () => void): Promise<void>` - Closes all connections and cleanup
+- `leaveChannel(): Promise<void>` - Leaves the Agora RTC channel and cleans up all resources
+- `closeStreaming(): Promise<void>` - Alias for `leaveChannel()`
 - `isConnected(): boolean` - Checks if connected to Agora services
 - `isChannelJoined(): boolean` - Checks if joined to a channel
 
 #### Chat Management
-- `joinChat(metadata: Metadata): Promise<void>` - Initializes the avatar chat session
-- `setParameters(metadata: Metadata): voide` - Call setAvatarParameter [Check here for parameter](https://docs.akool.com/implementation-guidestreaming-avatar#6-control-avatar-parameters)
-- `leaveChat(): Promise<void>` - Leaves the chat session but stays in channel
 - `sendMessage(content: string): Promise<void>` - Sends a message to the avatar
 - `interrupt(): Promise<void>` - Interrupts the current avatar response
 - `getMessages(): Message[]` - Returns all chat messages
@@ -402,14 +366,6 @@ interface AgoraCredentials {
   agora_channel: string;
   agora_token: string;
   agora_uid: number;
-}
-
-interface Metadata {
-  vid?: string;    // voiceId
-  vurl?: string;   // voiceUrl
-  lang?: string;   // language
-  mode?: number;   // modeType
-  bgurl?: string;  // backgroundUrl
 }
 
 interface Message {

@@ -12,7 +12,6 @@ import AgoraRTC, {
 import {
   RTCClient,
   AgoraCredentials,
-  Metadata,
   StreamMessage,
   NetworkStats,
   Message,
@@ -21,7 +20,6 @@ import {
 } from "./types";
 
 import {
-  setAvatarParams,
   interruptResponse,
   sendMessageToAvatar,
 } from "./agoraHelpers";
@@ -49,7 +47,6 @@ export class GenericAgoraSDK {
   private events: SDKEvents = {};
   private messageMap: Map<string, Message> = new Map();
   private isJoined: boolean = false;
-  private connected: boolean = false;
 
   constructor(options?: { mode?: string; codec?: SDK_CODEC }) {
     this.client = AgoraRTC.createClient({
@@ -208,36 +205,6 @@ export class GenericAgoraSDK {
     const { agora_app_id, agora_channel, agora_token, agora_uid } = credentials;
     await this.client.join(agora_app_id, agora_channel, agora_token, agora_uid);
     this.isJoined = true;
-    this.connected = true;
-
-  }
-
-
-  /**
-   * @deprecated Use {@link joinChannel} and set avatar parameters after joining. This method will be removed in a future version.
-   */
-  public async joinChat(metadata: Metadata): Promise<void> {
-    console.warn(
-      '[GenericAgoraSDK] joinChat() is deprecated and will be removed in a future version.'
-    );
-    await setAvatarParams(this.client, metadata);
-    this.connected = true;
-  }
-
-  /**
-   * @deprecated This method will be removed in a future version. Set avatar/stream parameters through the recommended API instead.
-   */
-  async setParameters(params: Metadata): Promise<void> {
-    console.warn(
-      '[GenericAgoraSDK] setParameters() is deprecated and will be removed in a future version.'
-    );
-    await setAvatarParams(this.client, params);
-  }
-
-  public async leaveChat(): Promise<void> {
-    this.client.removeAllListeners('stream-message');
-    this.connected = false;
-    this.messageMap.clear();
   }
 
   public async leaveChannel(): Promise<void> {
@@ -246,27 +213,17 @@ export class GenericAgoraSDK {
       this.audioTrack.stop();
       this.audioTrack.close();
       this.audioTrack = null;
-      this.connected = false;
     }
 
     await this.client.leave();
     this.isJoined = false;
-
-    // Clean up listeners
-    this.client.removeAllListeners('network-quality');
-    this.client.removeAllListeners('exception');
-    this.client.removeAllListeners('user-published');
-    this.client.removeAllListeners('user-unpublished');
-    this.client.removeAllListeners('token-privilege-will-expire');
-    this.client.removeAllListeners('token-privilege-did-expire');
+    this.messageMap.clear();
+    this.client.removeAllListeners();
+    this.registerDefaultListeners();
   }
 
-  public async closeStreaming(cb?: () => void): Promise<void> {
-    await this.leaveChat();
+  public async closeStreaming(): Promise<void> {
     await this.leaveChannel();
-    if (cb) {
-      cb();
-    }
   }
 
   public async sendMessage(content: string): Promise<void> {
@@ -313,7 +270,7 @@ export class GenericAgoraSDK {
   }
 
   public isConnected(): boolean {
-    return this.connected;
+    return this.isJoined;
   }
 
   public isChannelJoined(): boolean {
