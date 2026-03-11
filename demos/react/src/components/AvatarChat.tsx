@@ -30,8 +30,6 @@ export const AvatarChat = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isMicEnabled, setIsMicEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [voiceId] = useState('Xb7hH8MSUJpSbSDYk0k2');
-  const [lang] = useState('en');
 
   useEffect(() => {
     const initSDK = async () => {
@@ -102,19 +100,13 @@ export const AvatarChat = () => {
         agora_uid: credentials.agora_uid
       });
 
-      await sdk.joinChat({
-        vid: voiceId,
-        lang: lang,
-        mode: 2
-      });
-
       setIsConnected(true);
     } catch (error) {
       console.error("Failed to connect:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [sdk, voiceId, lang]);
+  }, [sdk]);
 
   const toggleMic = useCallback(async () => {
     if (!sdk) return;

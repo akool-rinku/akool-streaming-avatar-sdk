@@ -139,12 +139,6 @@ try {
 
                     // Initialize the session
                     await agoraSDK.joinChannel(credentials);
-                    console.log('joined chat', );
-                    await agoraSDK.joinChat({
-                        vid: "Xb7hH8MSUJpSbSDYk0k2",
-                        lang: "en",
-                        mode: 2
-                    });
 
                     // Hide start view and show main interface
                     document.getElementById('start-view').classList.add('hidden');

@@ -269,6 +269,9 @@ export class GenericAgoraSDK {
     return this.audioTrack !== null;
   }
 
+  /**
+   * @deprecated Use `isChannelJoined()` instead. This method is now an alias for `isChannelJoined()`.
+   */
   public isConnected(): boolean {
     return this.isJoined;
   }

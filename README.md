@@ -308,7 +308,7 @@ new GenericAgoraSDK(options?: { mode?: string; codec?: SDK_CODEC })
 #### Connection Management
 - `joinChannel(credentials: AgoraCredentials): Promise<void>` - Joins an Agora RTC channel
 - `closeStreaming(): Promise<void>` - Leaves the channel and cleans up all resources
-- `isConnected(): boolean` - Checks if connected to Agora services
+- `isConnected(): boolean` - **Deprecated**: Use `isChannelJoined()` instead
 - `isChannelJoined(): boolean` - Checks if joined to a channel
 
 #### Chat Management
